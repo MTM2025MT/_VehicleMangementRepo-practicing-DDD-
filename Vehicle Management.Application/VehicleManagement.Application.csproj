@@ -1,0 +1,3 @@
+<ItemGroup>
+  <ProjectReference Include="..\Vehicle Management.Domain\VehicleManagement.Domain.csproj" />
+</ItemGroup>
