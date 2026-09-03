@@ -20,7 +20,7 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.BookVehicle
             bookingRepository = BookingRepository;
             vehicleRepository = VehicleRepository;
         }
-        public async Task<int> Handle(BookVehicleCommand command, CancellationToken cancellationToken)
+        public async Task<int> Handle2(BookVehicleCommand command, CancellationToken cancellationToken)
         {
 
 
@@ -49,7 +49,7 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.BookVehicle
             }
             return booking.Id;
         }
-        public async Task<int> Handle2(BookVehicleCommand command, CancellationToken cancellationToken)
+        public async Task<int> Handle(BookVehicleCommand command, CancellationToken cancellationToken)
         {
             var booking = DomainBooking.Create(
                 command.Fuel_Policy,

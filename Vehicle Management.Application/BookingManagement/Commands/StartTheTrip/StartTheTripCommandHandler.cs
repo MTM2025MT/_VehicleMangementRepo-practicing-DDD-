@@ -13,7 +13,9 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.StartTheTrip
     {
         private IBookingRepository bookingRepository;
         private IVehicleRepository vehicleRepository;
-        public StartTheTripCommandHandler(IBookingRepository BookingRepository, IVehicleRepository VehicleRepository)
+        private readonly IUnitOfWork unitOfWork;
+
+        public StartTheTripCommandHandler(IUnitOfWork unitOfWork, IBookingRepository BookingRepository, IVehicleRepository VehicleRepository)
         {
             bookingRepository = BookingRepository;
             vehicleRepository = VehicleRepository;
@@ -41,6 +43,7 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.StartTheTrip
             }
 
 
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;
         }

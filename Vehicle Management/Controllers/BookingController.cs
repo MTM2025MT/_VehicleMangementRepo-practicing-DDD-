@@ -6,6 +6,7 @@ using Vehicle_Management.Application.BookingManagement.Commands.CancelBooking;
 using Vehicle_Management.Application.BookingManagement.Commands.CompleteTheTrip;
 using Vehicle_Management.Application.BookingManagement.Commands.StartTheTrip;
 using Vehicle_Management.Application.BookingManagement.Queries.GetBookingInfo;
+using Vehicle_Management.Dtos;
 
 namespace Vehicle_Management.Controllers
 {
@@ -20,10 +21,11 @@ namespace Vehicle_Management.Controllers
         }
 
         [HttpPost("book")]
-        public async Task<IActionResult> BookVehicle(BookVehicleCommand command)
+        public async Task<IActionResult> BookVehicle(BookVehicleDto BookVehicleForm)
         {
             try
             {
+                var command= new BookVehicleCommand(BookVehicleForm.StartDateTime,BookVehicleForm.EndDateTime,BookVehicleForm.EmployeeId,BookVehicleForm.VehicleId,BookVehicleForm.Fuel_Policy);
                 var booking_id = await meditar.Send(command);
                 return Ok(booking_id);
 
@@ -85,7 +87,7 @@ namespace Vehicle_Management.Controllers
                 var result = await meditar.Send(command);
                 if (result == true)
                     return Ok(result);
-                else (result == false)
+                else if(result == false)
                       return Problem(detail: "Failed to cancel the trip.", title: "Cancelation of Trip  Error", statusCode: StatusCodes.Status500InternalServerError);
   
             }

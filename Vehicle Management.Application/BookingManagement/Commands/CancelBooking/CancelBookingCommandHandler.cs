@@ -11,9 +11,12 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.CancelBookin
     internal class CancelBookingCommandHandler:IRequestHandler<CancelBookingCommand,bool>
     {
         private IBookingRepository bookingRepository;
-        public CancelBookingCommandHandler(IBookingRepository BookingRepository, IVehicleRepository VehicleRepository)
+        private IUnitOfWork unitOfWork
+
+        public CancelBookingCommandHandler(IBookingRepository BookingRepository, IVehicleRepository VehicleRepository,IUnitOfWork UnitOfWork)
         {
             bookingRepository = BookingRepository;
+            unitOfWork = UnitOfWork;
         }
         public async Task<bool> Handle(CancelBookingCommand Command, CancellationToken cancellationToken)
         {
@@ -27,6 +30,7 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.CancelBookin
             var result =await bookingRepository.UpdateAsync(booking);
              if (result is BookingAggregateDomain.Booking)
             {
+                await unitOfWork.SaveChangesAsync(cancellationToken);
                 return true;
             }
             return false;
