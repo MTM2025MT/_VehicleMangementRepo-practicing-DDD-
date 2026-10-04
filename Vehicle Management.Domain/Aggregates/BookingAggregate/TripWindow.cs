@@ -15,7 +15,7 @@ namespace Vehicle_Management.Domain.Aggregates.BookingAggregate
         {
             if (start >= end)
                 throw new Exception("Start must be before End");
-
+            
             Start = start;
             End = end;
         }

@@ -9,10 +9,12 @@ namespace Vehicle_Management.Application.Vehicle.Commands.SendToMaintenance
     public class SendToMaintenanceCommandHandler : IRequestHandler<SendToMaintenaceCommand, bool>
     {
         private readonly IVehicleRepository _vehicleRepository;
+        private IUnitOfWork unitOfWork;
 
-        public SendToMaintenanceCommandHandler(IVehicleRepository vehicleRepository)
+        public SendToMaintenanceCommandHandler(IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork)
         {
             _vehicleRepository = vehicleRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(SendToMaintenaceCommand command, CancellationToken cancellationToken)
@@ -24,6 +26,7 @@ namespace Vehicle_Management.Application.Vehicle.Commands.SendToMaintenance
 
             vehicle.MoveToMaintenance();
             await _vehicleRepository.UpdateAsync(vehicle);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
             if (cancellationToken.IsCancellationRequested) return false;
             if (vehicle._status != Domain.Aggregates.VehicleAggregate.Status.Maintenance) return false;
             return true;

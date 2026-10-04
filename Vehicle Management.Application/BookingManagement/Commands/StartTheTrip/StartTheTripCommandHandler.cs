@@ -13,18 +13,19 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.StartTheTrip
     {
         private IBookingRepository bookingRepository;
         private IVehicleRepository vehicleRepository;
-        private readonly IUnitOfWork unitOfWork;
+        private readonly  IUnitOfWork _unitOfWork;
 
         public StartTheTripCommandHandler(IUnitOfWork unitOfWork, IBookingRepository BookingRepository, IVehicleRepository VehicleRepository)
         {
             bookingRepository = BookingRepository;
             vehicleRepository = VehicleRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<bool> Handle(StartTheTripCommand command, CancellationToken cancellationToken)
         {
             var booking = await bookingRepository.GetByIdAsync(command.Booking_Id);
 
-            if (booking == null)
+            if (booking is null)
             {
                 throw new Exception("this is id is invalid or wrong");
             }
@@ -43,7 +44,7 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.StartTheTrip
             }
 
 
-            await unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;
         }

@@ -25,7 +25,7 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.BookVehicle
 
 
             var vehicle= await vehicleRepository.GetByIdAsync(command.VehicleId);
-            if (vehicle == null) 
+            if (vehicle is null) 
                 throw new Exception("there is no vicle with that id ");
             
             //here might be an race condtion to book an time 

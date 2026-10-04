@@ -11,7 +11,7 @@ namespace Vehicle_Management.Application.BookingManagement.Commands.CancelBookin
     internal class CancelBookingCommandHandler:IRequestHandler<CancelBookingCommand,bool>
     {
         private IBookingRepository bookingRepository;
-        private IUnitOfWork unitOfWork
+        private IUnitOfWork unitOfWork;
 
         public CancelBookingCommandHandler(IBookingRepository BookingRepository, IVehicleRepository VehicleRepository,IUnitOfWork UnitOfWork)
         {

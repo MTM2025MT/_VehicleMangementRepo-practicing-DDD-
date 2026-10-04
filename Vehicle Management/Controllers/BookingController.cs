@@ -76,7 +76,7 @@ namespace Vehicle_Management.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, ex);
             }
 
-            return StatusCode(StatusCodes.Status400BadRequest);
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         [HttpPost("cancel")]

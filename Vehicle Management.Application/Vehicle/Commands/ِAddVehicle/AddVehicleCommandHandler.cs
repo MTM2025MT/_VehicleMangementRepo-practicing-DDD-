@@ -11,10 +11,12 @@ namespace Vehicle_Management.Application.Vehicle.Commands._ِAddVehicle
     internal class AddVehicleCommandHandler : IRequestHandler<AddVehicleCommand, Unit>
     {
         private readonly IVehicleRepository _vehicleRepository;
+        private IUnitOfWork unitOfWork;
 
-        public AddVehicleCommandHandler(IVehicleRepository vehicleRepository)
+        public AddVehicleCommandHandler(IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork)
         {
             _vehicleRepository = vehicleRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(AddVehicleCommand command, CancellationToken cancellationToken)
@@ -30,7 +32,7 @@ namespace Vehicle_Management.Application.Vehicle.Commands._ِAddVehicle
             {
                 throw new Exception($"{ex.Message}", ex);
             }
-
+            await unitOfWork.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
     }

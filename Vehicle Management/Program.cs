@@ -1,11 +1,8 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web;
-using Microsoft.Identity.Web.Resource;
-using System;
+using MediatR;
 using Vehicle_Management.Application.Behaviors;
 using Vehicle_Management.Application.BookingManagement.Commands.CompleteTheTrip;
 using Vehicle_Management.Domain.IRepositories;
@@ -20,34 +17,38 @@ namespace Vehicle_Management
         {
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            // Add services to the container.
+
             builder.Services.AddDbContext<Context>(options =>
                 options.UseSqlServer(
                     connectionString,
                     b => b.MigrationsAssembly("Vehicle Management.Infrastructure")
                 )
             );
-            // Add services to the container.
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            var applicationAssembly = typeof(CompleteTheTripCommand).Assembly;
-            builder.Services.AddMediatR(cfg => {
-                cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
-                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
-            });
-            builder.Services.AddValidatorsFromAssembly(applicationAssembly);
             builder.Services.AddSwaggerGen();
 
-            // Register repositories
+            var applicationAssembly = typeof(CompleteTheTripCommand).Assembly;
+
+            builder.Services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(applicationAssembly);
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
+
+            builder.Services.AddValidatorsFromAssembly(applicationAssembly);
+
             builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IClientRequestsRepository, ClientRequestsRepository>();
             builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<Context>());
+
             var app = builder.Build();
-            // Configure the HTTP request pipeline.
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -55,7 +56,7 @@ namespace Vehicle_Management
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

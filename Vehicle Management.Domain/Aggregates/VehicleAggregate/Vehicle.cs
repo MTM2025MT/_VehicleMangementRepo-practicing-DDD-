@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Vehicle_Management.Domain.SeedWork;
 namespace Vehicle_Management.Domain.Aggregates.VehicleAggregate
 {
-    public class Vehicle : Entity, IAggregateRoot
+    public class Vehicle : Entity<string>, IAggregateRoot
     {
         public string License_Plate { get; private set; }
         public Classification _classification { get; private set; }
         public Status _status { get; private set; }
         public int Odometer { get; private set; }
+        public override string Id { get => License_Plate; protected set => base.Id = value; }
 
         public static Vehicle Create(string licensePlate, Classification classification, int odometer = 0)
         {

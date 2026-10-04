@@ -9,10 +9,12 @@ namespace Vehicle_Management.Application.Vehicle.Commands.MarkVehicleAsAvailable
     public class MarkVehicleAsAvailableCommandHandler : IRequestHandler<MarkVehicleAsAvailableCommand, Unit>
     {
         private readonly IVehicleRepository _vehicleRepository;
+        private IUnitOfWork unitOfWork;
 
-        public MarkVehicleAsAvailableCommandHandler(IVehicleRepository vehicleRepository)
+        public MarkVehicleAsAvailableCommandHandler(IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork,CancellationToken cancellationToken)
         {
             _vehicleRepository = vehicleRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(MarkVehicleAsAvailableCommand command, CancellationToken cancellationToken)
@@ -27,7 +29,8 @@ namespace Vehicle_Management.Application.Vehicle.Commands.MarkVehicleAsAvailable
                 throw new  Exception("failed to update the vehicle to avilable ");
 
             await _vehicleRepository.UpdateAsync(vehicle);
-
+            
+            await unitOfWork.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
     }

@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Vehicle_Management.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="VehicleManagement.Application.csproj" />
   </ItemGroup>
 

@@ -30,4 +30,10 @@
     <ProjectReference Include="..\Vehicle Management.Infrastructure\Vehicle Management.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Vehicle_Management.Tests\**\*.cs" />
+    <None Remove="Vehicle_Management.Tests\**\*" />
+    <EmbeddedResource Remove="Vehicle_Management.Tests\**\*" />
+  </ItemGroup>
+
 </Project>

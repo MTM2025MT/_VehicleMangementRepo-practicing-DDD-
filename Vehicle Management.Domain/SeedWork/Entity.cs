@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace Vehicle_Management.Domain.SeedWork
 {
-    public abstract class Entity
+    public abstract class Entity<T>: DomainEntity
+        where T : notnull
     {
         int? _requestedHashCode;
-        int _Id;
+        T _Id;
         private List<INotification> _domainEvents;
-        public virtual int Id
+        public virtual T Id
         {
             get
             {
@@ -41,21 +42,21 @@ namespace Vehicle_Management.Domain.SeedWork
         }
         public bool IsTransient()
         {
-            return this.Id == default(Int32);
+            return this.Id == null || this.Id.Equals(default(T));
         }
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is Entity))
+            if (obj == null || !(obj is Entity<T>))
                 return false;
             if (Object.ReferenceEquals(this, obj))
                 return true;
             if (this.GetType() != obj.GetType())
                 return false;
-            Entity item = (Entity)obj;
+            Entity<T> item = (Entity<T>)obj;
             if (item.IsTransient() || this.IsTransient())
                 return false;
             else
-                return item.Id == this.Id;
+                return EqualityComparer<T>.Default.Equals(item.Id, this.Id); ;
         }
         public override int GetHashCode()
         {
@@ -71,14 +72,14 @@ namespace Vehicle_Management.Domain.SeedWork
  else
                 return base.GetHashCode();
         }
-        public static bool operator ==(Entity left, Entity right)
+        public static bool operator ==(Entity<T> left, Entity<T> right)
         {
             if (Object.Equals(left, null))
                 return (Object.Equals(right, null));
             else
                 return left.Equals(right);
         }
-        public static bool operator !=(Entity left, Entity right)
+        public static bool operator !=(Entity<T> left, Entity<T> right)
         {
             return !(left == right);
         }

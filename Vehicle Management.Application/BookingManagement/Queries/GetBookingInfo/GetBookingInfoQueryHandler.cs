@@ -20,13 +20,13 @@ namespace Vehicle_Management.Application.BookingManagement.Queries.GetBookingInf
         public async Task<BookingInfoDto> Handle(GetBookingInfoQuery query, CancellationToken cancellationToken)
         {
             var booking = await _bookingrepository.GetByIdAsync(query.id);
-            if (booking == null)
+            if (booking is null)
                 throw new Exception("Vehicle not found.");
 
 
             var vehicle = await _vehicleRepository.GetByIdAsync(booking.Vehicle_id);
 
-            if (vehicle == null)
+            if (vehicle is null)
                 throw new Exception(" vehicle info was not found");
  
             return new BookingInfoDto(

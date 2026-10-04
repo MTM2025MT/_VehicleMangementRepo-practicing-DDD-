@@ -23,6 +23,7 @@ namespace Vehicle_Management.Infrastructure
 
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<ClientRequest> ClientRequests { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             await DispatchDomainEventsAsync();
@@ -34,7 +35,7 @@ namespace Vehicle_Management.Infrastructure
         {
             while (true)
             {
-                var entitiesWithEvents = ChangeTracker.Entries<Entity>()
+                var entitiesWithEvents = ChangeTracker.Entries<DomainEntity>()
                     .Select(e => e.Entity)
                     .Where(e => e.DomainEvents != null && e.DomainEvents.Any())
                     .ToList();
